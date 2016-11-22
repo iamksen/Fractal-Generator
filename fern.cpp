@@ -8,6 +8,7 @@ float matrix[2][2]; 		//affine matrix
 float pt[2]; 				//For storing coordinates
 float probability[4] = { 0.85, 0.92, 0.99, 1.00 };
 float a, b, c, d, e, f; 	//used in affine transform
+float angle = 0.0, transx = 0.0f, transy = 0.0f;
 
 //Vector to store the point of fern
 vector< pair<float, float> > points;
@@ -107,6 +108,8 @@ void draw_leaf()
 		//Clear all buffers.
 		//glFlush();
 	}
+	glRotatef(angle, 0, 0, 1);
+	glTranslatef(transx, transy, 0);
 	glFlush();
 }
 
@@ -133,6 +136,57 @@ void mouseclick(int button, int state, int x, int y)
     draw_leaf();
 }
 
+void moveup()
+{
+	transy += 0.09f;
+}
+
+void movedown()
+{
+	transy -= 0.09f;
+}
+
+void moveleft()
+{
+	transx -= 0.09f;
+}
+
+void moveright()
+{
+	transx += 0.09f;
+}
+
+void rotateleft()
+{
+	angle += 1.0;
+}
+
+void rotateright()
+{
+	angle -= 1.0;
+}
+
+void processkeyboardkeys(int key, int x, int y) {
+	
+	if( key == GLUT_KEY_UP ){
+		moveup();
+		draw_leaf();
+	}
+	else if( key == GLUT_KEY_DOWN ){
+		movedown();
+		draw_leaf();
+	}
+	else if( key == GLUT_KEY_LEFT )
+		moveleft();
+	else if( key == GLUT_KEY_RIGHT)
+		moveright();
+	else if( key == GLUT_KEY_F1)
+		rotateleft();
+	else if( key == GLUT_KEY_F2)
+		rotateright();
+	//draw_leaf();
+}
+
 int main ( int argc, char *argv[] )
 {
 	calculate_points();
@@ -143,6 +197,8 @@ int main ( int argc, char *argv[] )
 	glutCreateWindow("Fractal : Barnsley Fern");
 	glutDisplayFunc( draw_leaf );
 	
+	//To handle the keyboard events
+	//glutSpecialFunc( processkeyboardkeys );
 
 	//To handle mouse click and scrolling things
 	glutMouseFunc(mouseclick);
